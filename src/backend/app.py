@@ -995,8 +995,10 @@ def delete_files_in_directory():
             if os.path.isfile(file_path):
                 os.remove(file_path)
 
-        print("All files in the PDF output directory have been deleted.")
+        print("All files in the PDF output directory and chat history have been deleted.")
         vector_database.destroy_vector_db()
+        global chathistory1
+        chathistory1 = []
         return jsonify({'response_text': "All files in the PDF output directory have been deleted."}), 200
     except Exception as e:
         print(f"Error: {e}")
@@ -1091,6 +1093,15 @@ def update_prompt_template():
     prompt_template = user_input["prompt_template"]  # Extract vector range from user input
     vector_database.update_prompt_template(prompt_template)
     return jsonify({'response_text': 'Prompt Template was updated.'}), 200
+
+@app.route('/api/clear-chat-history', methods=['POST'])
+def clear_chat_history():
+    try:
+        global chathistory1
+        chathistory1 = []
+        return jsonify({'response_text': 'Chat history cleared successfully.'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/health', methods=['GET'])
 def health_check():
