@@ -997,8 +997,9 @@ def delete_files_in_directory():
 
         print("All files in the PDF output directory and chat history have been deleted.")
         vector_database.destroy_vector_db()
-        global chathistory1
+        global chathistory1, memory_chain
         chathistory1 = []
+        memory_chain.chat_memory.clear()
         return jsonify({'response_text': "All files in the PDF output directory have been deleted."}), 200
     except Exception as e:
         print(f"Error: {e}")
@@ -1097,9 +1098,10 @@ def update_prompt_template():
 @app.route('/api/clear-chat-history', methods=['POST'])
 def clear_chat_history():
     try:
-        global chathistory1
+        global chathistory1, memory_chain
         chathistory1 = []
-        return jsonify({'response_text': 'Chat history cleared successfully.'}), 200
+        memory_chain.chat_memory.clear()
+        return jsonify({'response_text': 'Chat history and memory cleared successfully.'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
